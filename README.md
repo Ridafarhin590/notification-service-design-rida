@@ -1,175 +1,171 @@
-# 🔔 Notification Service System – Database & System Design
+# 🔔 Notification Service System
 
-<p align="center">
-  <img src="./Notification_Service_Complete_ERD.png.png" alt="Notification Service Complete ERD" width="100%">
-</p>
+A scalable **Multi-Channel Notification Service** for sending, tracking, retrying, and managing notifications through Email, SMS, Push, In-App, WhatsApp, and other channels.
 
-<h3 align="center">
-Scalable Multi-Channel Notification Service
-</h3>
+## 👨‍💻 Candidate
 
----
+**RIDA FARHIN**
 
-## 📌 Project Overview
+**Role:** Software Engineer / Java Full Stack Developer
 
-This project presents the database and system design of a scalable **Notification Service** capable of sending notifications through multiple communication channels.
+## 🎯 Objectives
 
-The system is designed to support:
+- Support multiple notification channels
+- Support multiple recipients
+- Track delivery status
+- Handle retries and failures
+- Support provider fallback
+- Manage notification templates
+- Support user preferences
+- Support scheduled notifications
+- Maintain notification events and history
 
-- Email
-- SMS
-- Push Notifications
-- In-App Notifications
-- Web Push
-- WhatsApp
-- Voice Notifications
-- Multiple recipients
-- Multiple notification channels
-- Notification templates
-- Scheduled notifications
-- User notification preferences
-- Provider management
-- Provider fallback
-- Retry mechanisms
-- Delivery tracking
-- Webhook callbacks
-- Notification events and audit history
-- Campaign-based notifications
-- Dead-letter handling
-- Attachments
-
-The design focuses on **scalability, reliability, maintainability, extensibility, and fault tolerance**.
-
----
-
-# 📑 Table of Contents
-
-- [Project Overview](#-project-overview)
-- [Problem Statement](#-problem-statement)
-- [Objectives](#-objectives)
-- [Key Features](#-key-features)
-- [Complete ERD](#-complete-erd)
-- [High-Level Architecture](#-high-level-architecture)
-- [Notification Flow](#-notification-flow)
-- [Database Design](#-database-design)
-- [Table Descriptions](#-table-descriptions)
-- [Entity Relationships](#-entity-relationships)
-- [Multi-Channel Notification](#-multi-channel-notification)
-- [Delivery Tracking](#-delivery-tracking)
-- [Retry Mechanism](#-retry-mechanism)
-- [Provider Management and Fallback](#-provider-management-and-fallback)
-- [Webhook Handling](#-webhook-handling)
-- [User Preferences](#-user-preferences)
-- [Scheduled Notifications](#-scheduled-notifications)
-- [Campaign Notifications](#-campaign-notifications)
-- [Dead Letter Handling](#-dead-letter-handling)
-- [Attachments](#-attachments)
-- [Indexes and Performance](#-indexes-and-performance)
-- [Data Integrity](#-data-integrity)
-- [Security Considerations](#-security-considerations)
-- [Scalability](#-scalability)
-- [Reliability and Fault Tolerance](#-reliability-and-fault-tolerance)
-- [Design Decisions](#-design-decisions)
-- [Future Enhancements](#-future-enhancements)
-- [Repository Structure](#-repository-structure)
-- [Interview Explanation](#-interview-explanation)
-- [Conclusion](#-conclusion)
-
----
-
-# 🎯 Problem Statement
-
-Modern applications need to communicate with users through different channels.
-
-For example:
-
-- An e-commerce application may send order confirmation through Email and SMS.
-- A banking application may send security alerts through SMS, Email and Push.
-- A food delivery application may send order updates through Push and WhatsApp.
-- A SaaS application may send system alerts through Email and In-App notifications.
-
-Building separate notification logic inside every application creates problems such as:
-
-- Duplicate implementation
-- Difficult provider management
-- Poor scalability
-- Difficult retry handling
-- No centralized delivery tracking
-- Difficult failure management
-- Inconsistent notification templates
-- Difficult preference management
-
-Therefore, a centralized **Notification Service** can provide a common solution for all applications.
-
----
-
-# 🎯 Objectives
-
-The main objectives of this design are:
-
-1. Support multiple notification channels.
-2. Support multiple recipients.
-3. Track every notification independently.
-4. Track individual delivery attempts.
-5. Support multiple external providers.
-6. Implement provider fallback.
-7. Support retries for failed deliveries.
-8. Store notification templates.
-9. Support scheduled notifications.
-10. Support user notification preferences.
-11. Handle provider webhooks.
-12. Maintain notification history and audit events.
-13. Support campaigns and bulk notifications.
-14. Provide a scalable database structure.
-15. Keep the design extensible for future channels.
-
----
-
-# ⭐ Key Features
-
-## 1. Multi-Channel Support
-
-The service can support:
-
-- Email
-- SMS
-- Push
-- In-App
-- Web Push
-- WhatsApp
-- Voice
-
-New channels can be added without changing the core notification model.
-
----
-
-## 2. Multiple Recipients
-
-One notification can be sent to:
-
-- One user
-- Multiple users
-- Multiple email addresses
-- Multiple phone numbers
-- Multiple devices
-
-Recipients are stored separately in:
-
-`NOTIFICATION_RECIPIENTS`
-
----
-
-## 3. Multiple Deliveries
-
-A single notification can have multiple delivery records.
-
-For example:
+## 🏗️ Architecture
 
 ```text
+Client Services
+      ↓
+Notification API
+      ↓
+Notification Service
+      ↓
+Message Queue
+      ↓
+Notification Workers
+      ↓
+Channels / Providers
+      ↓
+External Services
+```
+
+## 🗺️ ERD
+
+<p align="center">
+  <img src="./Notification_Service_Complete_ERD.png"
+       alt="Notification Service ERD"
+       width="100%">
+</p>
+
+## 🗄️ Main Database Entities
+
+```text
+USERS
+USER_DEVICES
+USER_NOTIFICATION_PREFERENCES
+USER_CHANNEL_PREFERENCES
+USER_QUIET_HOURS
+
+NOTIFICATION_CATEGORIES
+NOTIFICATION_TYPES
+NOTIFICATION_TEMPLATES
+NOTIFICATIONS
+NOTIFICATION_RECIPIENTS
+
+NOTIFICATION_CHANNELS
+NOTIFICATION_PROVIDERS
+NOTIFICATION_DELIVERIES
+NOTIFICATION_RETRY_ATTEMPTS
+NOTIFICATION_WEBHOOKS
+NOTIFICATION_EVENTS
+
+NOTIFICATION_ATTACHMENTS
+NOTIFICATION_CAMPAIGNS
+DEAD_LETTER_NOTIFICATIONS
+```
+
+## 🔄 Core Flow
+
+```text
+User
+ ↓
+Notification Recipient
+ ↓
 Notification
-     |
-     +---- Email Delivery
-     |
-     +---- SMS Delivery
-     |
-     +---- Push Delivery
+ ↓
+Delivery
+ ↓
+Channel
+ ↓
+Provider
+ ↓
+External Service
+ ↓
+Delivery Status
+```
+
+## 🔁 Retry & Fallback
+
+```text
+Delivery
+   ↓
+Failed
+   ↓
+Retry
+   ↓
+Provider Fallback
+   ↓
+Success
+```
+
+If all attempts fail:
+
+```text
+Failed
+   ↓
+Dead Letter
+```
+
+## ⭐ Key Design Decisions
+
+- `NOTIFICATION_RECIPIENTS` allows one notification to have multiple users.
+- `NOTIFICATION_DELIVERIES` tracks each channel delivery independently.
+- `NOTIFICATION_CHANNELS` separates communication channels from providers.
+- Multiple providers allow fallback when a provider fails.
+- `NOTIFICATION_RETRY_ATTEMPTS` maintains retry history.
+- Webhooks update delivery status asynchronously.
+- Message queues allow scalable asynchronous processing.
+
+## 🛠️ Suggested Technology Stack
+
+```text
+Backend     → Java + Spring Boot
+Database    → PostgreSQL / MySQL
+Messaging   → Kafka / RabbitMQ
+Cache       → Redis
+Security    → Spring Security + JWT
+Deployment  → Docker / Kubernetes
+Storage     → AWS S3
+```
+
+## 🎤 Interview Summary
+
+The Notification Service is designed as a centralized and scalable system for managing multi-channel notifications. The core design separates notifications, recipients, deliveries, channels, and providers, allowing the system to support multiple users, multiple channels, retries, provider fallback, scheduling, delivery tracking, and asynchronous processing.
+
+## 📁 Repository Structure
+
+```text
+notification-service-design-rida/
+│
+├── README.md
+├── Notification_Service_ERD.md
+└── Notification_Service_Complete_ERD.png
+```
+
+
+## 👨‍💻 Prepared By
+
+**RIDA FARHIN**
+
+**Software Engineer / Java Full Stack Developer**
+
+**Notification Service System – Database & System Design**
+
+---
+
+## ⭐ Project Status
+
+**Status:** Completed
+
+**Type:** Database Design + System Design
+
+**Focus:** Scalable Multi-Channel Notification Service
