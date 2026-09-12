@@ -1,4 +1,4 @@
-# 🔔 Notification Service System
+# 🔔 Notification Service System Design
 
 A scalable **Multi-Channel Notification Service** for sending, tracking, retrying, and managing notifications through Email, SMS, Push, In-App, WhatsApp, and other channels.
 
