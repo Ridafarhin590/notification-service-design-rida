@@ -1,7 +1,7 @@
 # 🔔 Notification Service System – Database & System Design
 
 <p align="center">
-  <img src="./Notification_Service_Complete_ERD.png" alt="Notification Service Complete ERD" width="100%">
+  <img src="./Notification_Service_Complete_ERD.png.png" alt="Notification Service Complete ERD" width="100%">
 </p>
 
 <h3 align="center">
