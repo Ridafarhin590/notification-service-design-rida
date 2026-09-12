@@ -150,7 +150,7 @@ Examples:
 
 # 3. Complete ERD
 
-![Notification Service Complete ERD](./Notification_Service_Complete_ERD.png)
+![Notification Service Complete ERD](./Notification_Service_Complete_ERD.png.png)
 
 ---
 
