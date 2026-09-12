@@ -41,7 +41,7 @@ External Services
 ## 🗺️ ERD
 
 <p align="center">
-  <img src="./Notification_Service_Complete_ERD.png"
+  <img src="./Notification_Service_Complete_ERD.png.png"
        alt="Notification Service ERD"
        width="100%">
 </p>
